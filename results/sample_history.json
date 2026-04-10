@@ -1,0 +1,508 @@
+{
+    "episode_rewards": [
+        16.163668208629026,
+        30.561664293120835,
+        18.241320783669366,
+        24.409941870029996,
+        21.924010564987313,
+        24.16946525859331,
+        34.445647805243965,
+        21.001904298017372,
+        33.06612347722732,
+        27.682339281546643,
+        19.249782840742206,
+        36.151496370521365,
+        30.120747602031365,
+        29.775648048481642,
+        29.370965614159655,
+        39.75539123980056,
+        34.626822601996,
+        31.204499350966792,
+        30.725181358470618,
+        39.217899677520776,
+        38.685068211120466,
+        44.52738879321752,
+        37.11398127238075,
+        46.49904130945433,
+        32.33712090155138,
+        37.326981392353666,
+        42.39833874552617,
+        33.81815559832671,
+        39.05848201772646,
+        42.2212358696107,
+        49.07170888438322,
+        39.72629900537342,
+        58.487591321645155,
+        52.04321798062782,
+        46.487827797626366,
+        49.188506528142995,
+        47.50402015921416,
+        48.45020806743283,
+        47.901169515535365,
+        52.99674814726823,
+        43.57589263044888,
+        57.20254760144754,
+        52.06990759484964,
+        51.04320413231939,
+        52.64114396431826,
+        64.88858076444244,
+        55.16096955228357,
+        52.27371745907794,
+        46.55691661967193,
+        48.931648694457316
+    ],
+    "episode_metrics": [
+        {
+            "throughput": 60.0,
+            "retransmit_rate": 7.798571698929581,
+            "avg_rtt": 50.0,
+            "total_packets": 1000,
+            "delivered_packets": 600,
+            "retransmitted_packets": 77
+        },
+        {
+            "throughput": 62.898436990629754,
+            "retransmit_rate": 7.6166307249767895,
+            "avg_rtt": 49.7,
+            "total_packets": 1100,
+            "delivered_packets": 628,
+            "retransmitted_packets": 76
+        },
+        {
+            "throughput": 60.149925909275126,
+            "retransmit_rate": 7.845307375011844,
+            "avg_rtt": 49.4,
+            "total_packets": 1200,
+            "delivered_packets": 601,
+            "retransmitted_packets": 78
+        },
+        {
+            "throughput": 60.430510610574395,
+            "retransmit_rate": 8.012166192060297,
+            "avg_rtt": 49.1,
+            "total_packets": 1300,
+            "delivered_packets": 604,
+            "retransmitted_packets": 80
+        },
+        {
+            "throughput": 62.46731208415804,
+            "retransmit_rate": 6.95073187867837,
+            "avg_rtt": 48.8,
+            "total_packets": 1400,
+            "delivered_packets": 624,
+            "retransmitted_packets": 69
+        },
+        {
+            "throughput": 63.260856792399274,
+            "retransmit_rate": 6.680277393067482,
+            "avg_rtt": 48.5,
+            "total_packets": 1500,
+            "delivered_packets": 632,
+            "retransmitted_packets": 66
+        },
+        {
+            "throughput": 64.00788274046671,
+            "retransmit_rate": 7.70863398966232,
+            "avg_rtt": 48.2,
+            "total_packets": 1600,
+            "delivered_packets": 640,
+            "retransmitted_packets": 77
+        },
+        {
+            "throughput": 63.48486882235974,
+            "retransmit_rate": 7.240928589934265,
+            "avg_rtt": 47.9,
+            "total_packets": 1700,
+            "delivered_packets": 634,
+            "retransmitted_packets": 72
+        },
+        {
+            "throughput": 64.93634306914888,
+            "retransmit_rate": 7.541117777377984,
+            "avg_rtt": 47.6,
+            "total_packets": 1800,
+            "delivered_packets": 649,
+            "retransmitted_packets": 75
+        },
+        {
+            "throughput": 66.17353816568392,
+            "retransmit_rate": 7.94586052247537,
+            "avg_rtt": 47.3,
+            "total_packets": 1900,
+            "delivered_packets": 661,
+            "retransmitted_packets": 79
+        },
+        {
+            "throughput": 62.222858893916815,
+            "retransmit_rate": 7.644785994562704,
+            "avg_rtt": 47.0,
+            "total_packets": 2000,
+            "delivered_packets": 622,
+            "retransmitted_packets": 76
+        },
+        {
+            "throughput": 66.77935460557663,
+            "retransmit_rate": 6.666358865799808,
+            "avg_rtt": 46.7,
+            "total_packets": 2100,
+            "delivered_packets": 667,
+            "retransmitted_packets": 66
+        },
+        {
+            "throughput": 68.39103268477578,
+            "retransmit_rate": 6.528006546093456,
+            "avg_rtt": 46.4,
+            "total_packets": 2200,
+            "delivered_packets": 683,
+            "retransmitted_packets": 65
+        },
+        {
+            "throughput": 64.98427926831693,
+            "retransmit_rate": 6.791448802479128,
+            "avg_rtt": 46.1,
+            "total_packets": 2300,
+            "delivered_packets": 649,
+            "retransmitted_packets": 67
+        },
+        {
+            "throughput": 66.69457519710491,
+            "retransmit_rate": 6.742276416064335,
+            "avg_rtt": 45.8,
+            "total_packets": 2400,
+            "delivered_packets": 666,
+            "retransmitted_packets": 67
+        },
+        {
+            "throughput": 66.78485295073256,
+            "retransmit_rate": 6.362151001383117,
+            "avg_rtt": 45.5,
+            "total_packets": 2500,
+            "delivered_packets": 667,
+            "retransmitted_packets": 63
+        },
+        {
+            "throughput": 67.1345174126649,
+            "retransmit_rate": 6.411061444692155,
+            "avg_rtt": 45.2,
+            "total_packets": 2600,
+            "delivered_packets": 671,
+            "retransmitted_packets": 64
+        },
+        {
+            "throughput": 72.00982444037793,
+            "retransmit_rate": 6.182184617115627,
+            "avg_rtt": 44.9,
+            "total_packets": 2700,
+            "delivered_packets": 720,
+            "retransmitted_packets": 61
+        },
+        {
+            "throughput": 69.38159795849116,
+            "retransmit_rate": 6.415670294862497,
+            "avg_rtt": 44.6,
+            "total_packets": 2800,
+            "delivered_packets": 693,
+            "retransmitted_packets": 64
+        },
+        {
+            "throughput": 73.48622045918374,
+            "retransmit_rate": 5.773376111237835,
+            "avg_rtt": 44.3,
+            "total_packets": 2900,
+            "delivered_packets": 734,
+            "retransmitted_packets": 57
+        },
+        {
+            "throughput": 73.68577556556477,
+            "retransmit_rate": 5.990655168489557,
+            "avg_rtt": 44.0,
+            "total_packets": 3000,
+            "delivered_packets": 736,
+            "retransmitted_packets": 59
+        },
+        {
+            "throughput": 71.73898221884662,
+            "retransmit_rate": 4.989095151152242,
+            "avg_rtt": 43.7,
+            "total_packets": 3100,
+            "delivered_packets": 717,
+            "retransmitted_packets": 49
+        },
+        {
+            "throughput": 76.05838365436732,
+            "retransmit_rate": 5.864175752969945,
+            "avg_rtt": 43.4,
+            "total_packets": 3200,
+            "delivered_packets": 760,
+            "retransmitted_packets": 58
+        },
+        {
+            "throughput": 77.0785536992523,
+            "retransmit_rate": 5.335557231995976,
+            "avg_rtt": 43.1,
+            "total_packets": 3300,
+            "delivered_packets": 770,
+            "retransmitted_packets": 53
+        },
+        {
+            "throughput": 74.13636203770561,
+            "retransmit_rate": 5.88966532733764,
+            "avg_rtt": 42.8,
+            "total_packets": 3400,
+            "delivered_packets": 741,
+            "retransmitted_packets": 58
+        },
+        {
+            "throughput": 73.76166692341731,
+            "retransmit_rate": 5.675999308567208,
+            "avg_rtt": 42.5,
+            "total_packets": 3500,
+            "delivered_packets": 737,
+            "retransmitted_packets": 56
+        },
+        {
+            "throughput": 77.11155361262875,
+            "retransmit_rate": 5.093336184390858,
+            "avg_rtt": 42.2,
+            "total_packets": 3600,
+            "delivered_packets": 771,
+            "retransmitted_packets": 50
+        },
+        {
+            "throughput": 74.30527039251633,
+            "retransmit_rate": 5.076402528888937,
+            "avg_rtt": 41.9,
+            "total_packets": 3700,
+            "delivered_packets": 743,
+            "retransmitted_packets": 50
+        },
+        {
+            "throughput": 77.61157719322296,
+            "retransmit_rate": 4.9937496876529615,
+            "avg_rtt": 41.6,
+            "total_packets": 3800,
+            "delivered_packets": 776,
+            "retransmitted_packets": 49
+        },
+        {
+            "throughput": 76.99450429935668,
+            "retransmit_rate": 4.925203431078673,
+            "avg_rtt": 41.3,
+            "total_packets": 3900,
+            "delivered_packets": 769,
+            "retransmitted_packets": 49
+        },
+        {
+            "throughput": 79.16100721823605,
+            "retransmit_rate": 4.952656919929909,
+            "avg_rtt": 41.0,
+            "total_packets": 4000,
+            "delivered_packets": 791,
+            "retransmitted_packets": 49
+        },
+        {
+            "throughput": 80.75016799308122,
+            "retransmit_rate": 4.492800267047551,
+            "avg_rtt": 40.7,
+            "total_packets": 4100,
+            "delivered_packets": 807,
+            "retransmitted_packets": 44
+        },
+        {
+            "throughput": 80.48156948927297,
+            "retransmit_rate": 5.693174625342997,
+            "avg_rtt": 40.4,
+            "total_packets": 4200,
+            "delivered_packets": 804,
+            "retransmitted_packets": 56
+        },
+        {
+            "throughput": 79.8330872166139,
+            "retransmit_rate": 4.8661422825745575,
+            "avg_rtt": 40.1,
+            "total_packets": 4300,
+            "delivered_packets": 798,
+            "retransmitted_packets": 48
+        },
+        {
+            "throughput": 81.04459277095602,
+            "retransmit_rate": 4.448734116930065,
+            "avg_rtt": 39.8,
+            "total_packets": 4400,
+            "delivered_packets": 810,
+            "retransmitted_packets": 44
+        },
+        {
+            "throughput": 78.52486296986514,
+            "retransmit_rate": 4.629736056294199,
+            "avg_rtt": 39.5,
+            "total_packets": 4500,
+            "delivered_packets": 785,
+            "retransmitted_packets": 46
+        },
+        {
+            "throughput": 83.86208541233492,
+            "retransmit_rate": 4.252547318276443,
+            "avg_rtt": 39.2,
+            "total_packets": 4600,
+            "delivered_packets": 838,
+            "retransmitted_packets": 42
+        },
+        {
+            "throughput": 80.51969211322205,
+            "retransmit_rate": 3.861581537466656,
+            "avg_rtt": 38.9,
+            "total_packets": 4700,
+            "delivered_packets": 805,
+            "retransmitted_packets": 38
+        },
+        {
+            "throughput": 80.36714316544511,
+            "retransmit_rate": 4.596913329522431,
+            "avg_rtt": 38.6,
+            "total_packets": 4800,
+            "delivered_packets": 803,
+            "retransmitted_packets": 45
+        },
+        {
+            "throughput": 80.35907497210357,
+            "retransmit_rate": 5.005497402616777,
+            "avg_rtt": 38.3,
+            "total_packets": 4900,
+            "delivered_packets": 803,
+            "retransmitted_packets": 50
+        },
+        {
+            "throughput": 80.52113163259058,
+            "retransmit_rate": 4.868317117154884,
+            "avg_rtt": 38.0,
+            "total_packets": 5000,
+            "delivered_packets": 805,
+            "retransmitted_packets": 48
+        },
+        {
+            "throughput": 86.53210513327483,
+            "retransmit_rate": 4.192889373139513,
+            "avg_rtt": 37.7,
+            "total_packets": 5100,
+            "delivered_packets": 865,
+            "retransmitted_packets": 41
+        },
+        {
+            "throughput": 84.320880403947,
+            "retransmit_rate": 3.326534490133766,
+            "avg_rtt": 37.4,
+            "total_packets": 5200,
+            "delivered_packets": 843,
+            "retransmitted_packets": 33
+        },
+        {
+            "throughput": 85.65791656102867,
+            "retransmit_rate": 3.0272450443477688,
+            "avg_rtt": 37.1,
+            "total_packets": 5300,
+            "delivered_packets": 856,
+            "retransmitted_packets": 30
+        },
+        {
+            "throughput": 85.97123438052658,
+            "retransmit_rate": 3.273417893088146,
+            "avg_rtt": 36.8,
+            "total_packets": 5400,
+            "delivered_packets": 859,
+            "retransmitted_packets": 32
+        },
+        {
+            "throughput": 85.417373316431,
+            "retransmit_rate": 3.309429090311823,
+            "avg_rtt": 36.5,
+            "total_packets": 5500,
+            "delivered_packets": 854,
+            "retransmitted_packets": 33
+        },
+        {
+            "throughput": 89.93942878156871,
+            "retransmit_rate": 3.913532093618691,
+            "avg_rtt": 36.2,
+            "total_packets": 5600,
+            "delivered_packets": 899,
+            "retransmitted_packets": 39
+        },
+        {
+            "throughput": 90.03411479847111,
+            "retransmit_rate": 3.5838372227872575,
+            "avg_rtt": 35.9,
+            "total_packets": 5700,
+            "delivered_packets": 900,
+            "retransmitted_packets": 35
+        },
+        {
+            "throughput": 87.28849020650523,
+            "retransmit_rate": 3.4258171184862434,
+            "avg_rtt": 35.6,
+            "total_packets": 5800,
+            "delivered_packets": 872,
+            "retransmitted_packets": 34
+        },
+        {
+            "throughput": 86.39491109760351,
+            "retransmit_rate": 2.4437783640747566,
+            "avg_rtt": 35.3,
+            "total_packets": 5900,
+            "delivered_packets": 863,
+            "retransmitted_packets": 24
+        }
+    ],
+    "training_losses": [
+        1.0000848141154501,
+        0.9544790037079924,
+        0.9346784393212493,
+        0.9015826589836171,
+        0.8643973545226412,
+        0.7605702815949342,
+        0.7743839781640378,
+        0.7470214390244072,
+        0.7222930506703974,
+        0.6970602753302365,
+        0.6248514282962631,
+        0.6435459409915565,
+        0.6314973523117244,
+        0.6495418785234627,
+        0.5958289438397705,
+        0.565418213202617,
+        0.5599076640750216,
+        0.5392469989908226,
+        0.5442305279378037,
+        0.527260350889195,
+        0.5135070451808298,
+        0.4936315126863371,
+        0.4637003976014395,
+        0.45646232574102935,
+        0.42996047830755457,
+        0.4502081014705214,
+        0.4375444941436713,
+        0.4375538053698635,
+        0.39286255860631264,
+        0.3930674023699806,
+        0.38284459011960537,
+        0.35459235622611895,
+        0.36027085941649006,
+        0.36036705143243675,
+        0.3656466243561298,
+        0.36461154777939936,
+        0.3716659808568388,
+        0.3726761501601101,
+        0.36841852028338457,
+        0.34718135768827596,
+        0.3546901820227891,
+        0.30844125056915966,
+        0.31471496018323153,
+        0.29303488627156177,
+        0.3113436847128012,
+        0.3076110969405401,
+        0.31219726763974864,
+        0.304679063153248,
+        0.2964680736754652,
+        0.3014116769299179
+    ]
+}
