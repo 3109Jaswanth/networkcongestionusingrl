@@ -4,6 +4,7 @@ Main simulation runner for comparing load balancing algorithms
 
 import numpy as np
 import json
+import random
 from datetime import datetime
 
 from madqn.agent import MultiAgentDQN
@@ -16,7 +17,8 @@ from simulation.traffic_generator import TrafficGenerator, TrafficProfile
 class SimulationRunner:
     """Run simulations comparing different load balancing algorithms"""
     
-    def __init__(self, num_switches=4, num_paths=3, simulation_steps=1000):
+    def __init__(self, num_switches=4, num_paths=3, simulation_steps=1000, seed=None,
+                 link_capacity=250, queue_threshold=400):
         """
         Initialize simulation runner
         
@@ -24,12 +26,22 @@ class SimulationRunner:
             num_switches: Number of switches
             num_paths: Number of paths per switch
             simulation_steps: Number of simulation steps to run
+            seed: Optional random seed for reproducibility
+            link_capacity: Packets served per link per step
+            queue_threshold: Max queue length before dropping packets
         """
         self.num_switches = num_switches
         self.num_paths = num_paths
         self.simulation_steps = simulation_steps
+        self.seed = seed
+        self.link_capacity = link_capacity
+        self.queue_threshold = queue_threshold
+
+        if seed is not None:
+            np.random.seed(seed)
+            random.seed(seed)
         
-        self.topology = NetworkTopology(num_switches, num_paths)
+        self.topology = NetworkTopology(num_switches, num_paths, link_capacity=link_capacity)
         self.traffic_generator = TrafficGenerator(num_switches, num_paths)
         self.traffic_profile = TrafficProfile()
         
@@ -39,6 +51,27 @@ class SimulationRunner:
             'wrr': {'throughput': [], 'rtt': [], 'retransmits': [], 'metrics': [], 'time_series': [], 'queue_history': [], 'actions': []},
             'hac_bpnn': {'throughput': [], 'rtt': [], 'retransmits': [], 'metrics': [], 'time_series': [], 'queue_history': [], 'actions': []}
         }
+
+    def _record_step(self, algorithm, step, env, actions):
+        step_metrics = env.get_step_metrics()
+        self.results[algorithm]['time_series'].append({
+            'step': step,
+            'throughput': step_metrics['throughput'],
+            'retransmit_rate': step_metrics['retransmit_rate'],
+            'avg_rtt': step_metrics['avg_rtt'],
+            'queue_lengths': {f"{s}_{p}": float(env.queue_lengths[(s, p)])
+                              for s in range(self.num_switches)
+                              for p in range(self.num_paths)},
+            'actions': actions.copy()
+        })
+        self.results[algorithm]['queue_history'].append({
+            f"{s}_{p}": float(env.queue_lengths[(s, p)])
+            for s in range(self.num_switches)
+            for p in range(self.num_paths)
+        })
+        self.results[algorithm]['actions'].append(actions.copy())
+
+        return step_metrics
     
     def run_madqn_simulation(self, trained_madqn=None, traffic_pattern='normal'):
         """Run simulation with MADQN"""
@@ -48,13 +81,20 @@ class SimulationRunner:
             madqn = MultiAgentDQN(self.num_switches, state_size=4, action_size=self.num_paths)
         else:
             madqn = trained_madqn
+
+        # Evaluate policy greedily (no exploration randomness).
+        original_epsilons = [agent.epsilon for agent in madqn.agents]
+        for agent in madqn.agents:
+            agent.epsilon = 0.0
         
-        env = NetworkEnvironment(self.num_switches, self.num_paths)
+        env = NetworkEnvironment(
+            self.num_switches,
+            self.num_paths,
+            link_capacity=self.link_capacity,
+            queue_threshold=self.queue_threshold,
+            max_steps=self.simulation_steps
+        )
         states = env.reset()
-        
-        total_throughput = 0
-        total_latency = []
-        total_retransmits = 0
         
         for step in range(self.simulation_steps):
             # Get actions from all agents
@@ -62,6 +102,7 @@ class SimulationRunner:
             for agent_id in range(self.num_switches):
                 action = madqn.act(agent_id, states[agent_id])
                 actions.append(action)
+            actions = [int(a) for a in actions]
             
             # Generate traffic
             traffic = self.traffic_profile.generate_traffic(traffic_pattern, 
@@ -71,36 +112,27 @@ class SimulationRunner:
             # Step environment
             next_states, rewards, done = env.step(actions, traffic)
             
-            # Collect metrics
+            # Collect step metrics
             states = next_states
-            metrics = env.get_metrics()
-            self.results['madqn']['time_series'].append({
-                'step': step,
-                'throughput': metrics['throughput'],
-                'retransmit_rate': metrics['retransmit_rate'],
-                'avg_rtt': metrics['avg_rtt'],
-                'queue_lengths': {f"{s}_{p}": float(env.queue_lengths[(s, p)])
-                                  for s in range(self.num_switches)
-                                  for p in range(self.num_paths)},
-                'actions': actions.copy()
-            })
-            self.results['madqn']['queue_history'].append({
-                f"{s}_{p}": float(env.queue_lengths[(s, p)])
-                for s in range(self.num_switches)
-                for p in range(self.num_paths)
-            })
-            self.results['madqn']['actions'].append(actions.copy())
+            step_metrics = self._record_step('madqn', step, env, actions)
             
             if step % 100 == 0:
-                self.results['madqn']['metrics'].append(metrics)
-                print(f"  Step {step}: Throughput={metrics['throughput']:.2f}%, "
-                      f"RTT={metrics['avg_rtt']:.2f}ms")
+                self.results['madqn']['metrics'].append(dict(step_metrics))
+                print(f"  Step {step}: Throughput={step_metrics['throughput']:.2f}%, "
+                      f"RTT={step_metrics['avg_rtt']:.2f}ms")
+
+            if done:
+                break
         
         # Final metrics
         final_metrics = env.get_metrics()
         self.results['madqn']['throughput'] = final_metrics['throughput']
         self.results['madqn']['retransmits'] = final_metrics['retransmit_rate']
         self.results['madqn']['rtt'] = final_metrics['avg_rtt']
+
+        # Restore training-time epsilons.
+        for agent, epsilon in zip(madqn.agents, original_epsilons):
+            agent.epsilon = epsilon
         
         return final_metrics
     
@@ -109,16 +141,14 @@ class SimulationRunner:
         print(f"\n=== Running {algorithm.upper()} Simulation ===")
         
         controller = LoadBalancerController(algorithm, self.num_switches, self.num_paths)
-        
-        total_throughput = 0
-        total_delivered = 0
-        total_packets = 0
-        total_loss = 0
-        queue_lengths = {}
-        
-        for switch in range(self.num_switches):
-            for path in range(self.num_paths):
-                queue_lengths[(switch, path)] = 0
+        env = NetworkEnvironment(
+            self.num_switches,
+            self.num_paths,
+            link_capacity=self.link_capacity,
+            queue_threshold=self.queue_threshold,
+            max_steps=self.simulation_steps
+        )
+        states = env.reset()
         
         for step in range(self.simulation_steps):
             # Generate traffic
@@ -129,65 +159,25 @@ class SimulationRunner:
             # Get routing decisions
             actions = []
             for switch in range(self.num_switches):
-                # Simulate network state
-                state = np.array([0, 0, 0, 0], dtype=np.float32)
-                action = controller.get_routing_decision(switch, state)
+                action = controller.get_routing_decision(switch, states[switch])
                 actions.append(action)
-            
-            # Update queues based on traffic and routing
-            for (switch, path), packets in traffic.items():
-                if switch < self.num_switches and path < self.num_paths:
-                    queue_lengths[(switch, path)] += packets
-            
-            # Process packets
-            for switch in range(self.num_switches):
-                for path in range(self.num_paths):
-                    if (switch, path) in queue_lengths:
-                        queue_len = queue_lengths[(switch, path)]
-                        
-                        # Throughput
-                        throughput = min(queue_len, self.topology.link_capacity)
-                        total_delivered += throughput
-                        
-                        # Loss
-                        if queue_len > self.topology.link_capacity:
-                            loss = queue_len - self.topology.link_capacity
-                            total_loss += loss
-                        
-                        queue_lengths[(switch, path)] = max(0, queue_len - throughput)
-                        total_packets += throughput
-            
-            # Record time-series metrics and queue state
-            throughput_pct = (total_delivered / (total_packets + 1)) * 100
-            retransmit_rate = (total_loss / (total_packets + 1)) * 100
-            step_metrics = {
-                'step': step,
-                'throughput': throughput_pct,
-                'retransmit_rate': retransmit_rate,
-                'avg_rtt': 50,
-                'queue_lengths': {f"{s}_{p}": float(queue_lengths[(s, p)])
-                                  for s in range(self.num_switches)
-                                  for p in range(self.num_paths)},
-                'actions': actions.copy()
-            }
-            self.results[algorithm]['time_series'].append(step_metrics)
-            self.results[algorithm]['queue_history'].append(step_metrics['queue_lengths'])
-            self.results[algorithm]['actions'].append(actions.copy())
+            actions = [int(a) for a in actions]
+
+            next_states, _, done = env.step(actions, traffic)
+            states = next_states
+
+            step_metrics = self._record_step(algorithm, step, env, actions)
             
             if step % 100 == 0:
-                print(f"  Step {step}: Throughput={throughput_pct:.2f}%")
+                self.results[algorithm]['metrics'].append(dict(step_metrics))
+                print(f"  Step {step}: Throughput={step_metrics['throughput']:.2f}%")
+
+            if done:
+                break
+        metrics = env.get_metrics()
         
-        avg_throughput = (total_delivered / (total_packets + 1)) * 100
-        retransmit_rate = (total_loss / (total_packets + 1)) * 100
-        
-        metrics = {
-            'throughput': avg_throughput,
-            'retransmit_rate': retransmit_rate,
-            'avg_rtt': 50
-        }
-        
-        self.results[algorithm]['throughput'] = avg_throughput
-        self.results[algorithm]['retransmits'] = retransmit_rate
+        self.results[algorithm]['throughput'] = metrics['throughput']
+        self.results[algorithm]['retransmits'] = metrics['retransmit_rate']
         self.results[algorithm]['rtt'] = metrics['avg_rtt']
         
         return metrics

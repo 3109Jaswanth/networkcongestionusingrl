@@ -44,7 +44,8 @@ class DQNAgent:
     def _build_model(self):
         """Build Q-value neural network"""
         model = keras.Sequential([
-            keras.layers.Dense(64, activation='relu', input_shape=(self.state_size,)),
+            keras.layers.Input(shape=(self.state_size,)),
+            keras.layers.Dense(64, activation='relu'),
             keras.layers.Dense(64, activation='relu'),
             keras.layers.Dense(32, activation='relu'),
             keras.layers.Dense(self.action_size, activation='linear')
@@ -66,7 +67,7 @@ class DQNAgent:
         if np.random.random() < self.epsilon:
             return np.random.randint(0, self.action_size)
         else:
-            q_values = self.q_network.predict(np.array([state]), verbose=0)
+            q_values = self.q_network(np.array([state], dtype=np.float32), training=False).numpy()
             return np.argmax(q_values[0])
     
     def replay(self, batch_size):
@@ -75,12 +76,14 @@ class DQNAgent:
             return 0
         
         states, actions, rewards, next_states, dones = self.memory.sample(batch_size)
+        states = states.astype(np.float32)
+        next_states = next_states.astype(np.float32)
         
         # Predict Q-values for starting state
-        target_q_values = self.q_network.predict(states, verbose=0)
+        target_q_values = self.q_network(states, training=False).numpy()
         
         # Predict Q-values for next state using target network
-        next_q_values = self.target_network.predict(next_states, verbose=0)
+        next_q_values = self.target_network(next_states, training=False).numpy()
         
         for i in range(batch_size):
             if dones[i]:

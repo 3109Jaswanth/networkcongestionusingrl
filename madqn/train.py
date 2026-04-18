@@ -32,7 +32,8 @@ def generate_traffic(num_switches, num_paths, traffic_pattern='normal'):
 class MADQNTrainer:
     """Trainer for Multi-Agent DQN"""
     
-    def __init__(self, num_agents=4, num_paths=3, episodes=100, batch_size=32):
+    def __init__(self, num_agents=4, num_paths=3, episodes=100, batch_size=32,
+                 max_steps_per_episode=1000, train_frequency=1):
         """
         Initialize trainer
         
@@ -41,11 +42,15 @@ class MADQNTrainer:
             num_paths: Number of paths per agent
             episodes: Number of training episodes
             batch_size: Batch size for training
+            max_steps_per_episode: Max environment steps per episode
+            train_frequency: Train every N environment steps
         """
         self.num_agents = num_agents
         self.num_paths = num_paths
         self.episodes = episodes
         self.batch_size = batch_size
+        self.max_steps_per_episode = max_steps_per_episode
+        self.train_frequency = max(1, train_frequency)
         
         # Initialize multi-agent system
         self.madqn = MultiAgentDQN(num_agents, state_size=4, action_size=num_paths)
@@ -64,7 +69,7 @@ class MADQNTrainer:
         episode_reward = 0
         episode_loss = 0
         
-        for step in range(1000):  # Max steps per episode
+        for step in range(self.max_steps_per_episode):
             # Get actions from all agents
             actions = []
             for agent_id in range(self.num_agents):
@@ -82,9 +87,10 @@ class MADQNTrainer:
                 self.madqn.remember(agent_id, states[agent_id], actions[agent_id],
                                    rewards[agent_id], next_states[agent_id], done)
             
-            # Train all agents
-            loss = self.madqn.replay(self.batch_size)
-            episode_loss += loss if isinstance(loss, (int, float)) else 0
+            # Train all agents at a configurable frequency to reduce runtime.
+            if (step + 1) % self.train_frequency == 0:
+                loss = self.madqn.replay(self.batch_size)
+                episode_loss += loss if isinstance(loss, (int, float)) else 0
             
             # Update state and accumulate reward
             states = next_states
